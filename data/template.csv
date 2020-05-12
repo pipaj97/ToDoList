@@ -1,4 +1,6 @@
-status;task
-[ ];this is a test
-[ ];fsu fsiufg sfisvb
-[ ];gewdf
+status,task
+1,this is a test
+0,fsu fsiufg sfisvb
+0,gewdf
+1,wgdhjnhgrdsefw
+0,fwgehdtdf
