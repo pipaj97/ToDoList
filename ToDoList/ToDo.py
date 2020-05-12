@@ -32,7 +32,7 @@ dict
 def read_data(data_file):
     df = pd.read_csv(data_file, sep=",")
     return df
-
+#
 
 """
 Adds a task to the end of the csv file.
