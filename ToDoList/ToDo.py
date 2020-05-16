@@ -112,7 +112,7 @@ def parse_cli(operation, data):
     if operation in functions:
         return functions[operation](data)
     else:
-        print("Wrong input! Try one these:\n")
+        print("Wrong input! Try one of these:\n")
         for key, value in functions.items():
             print(key)
 
