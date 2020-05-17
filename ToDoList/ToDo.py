@@ -7,44 +7,44 @@ import pandas as pd
 # - docstring ändern
 
 
-"""
-Adds a task to the end of the csv file.
 
-Parameters
-----------
-input file: str
-
-user input: str
-
-Returns
--------
-data file: file
-
-"""
 
 
 def add_task(df):
+    """
+    Adds a task to the end of the csv file.
+
+    Parameters
+    ----------
+    input file: DataFrame
+
+    user input: str
+
+    Returns
+    -------
+    data file: DataFrame
+    """
     new_task = input("Add a new task:\n")
     df_mod = df.append({"STATUS": 0, "TASK": new_task}, ignore_index=True)
     csv_mod = df_mod.to_csv("../data/template.csv", index=False)
     return csv_mod, output_data(df_mod)
 
 
-"""
-prints the data in the terminal
 
-Parameters
-----------
-input file: str
-
-Returns
--------
-none
-
-"""
 
 
 def output_data(data):
+    """
+    prints the data in the terminal
+
+    Parameters
+    ----------
+    input file: str
+
+    Returns
+    -------
+    none
+    """
     data_out = data.copy()
     print("Your tasks:\n")
     data_out.loc[(data_out["STATUS"] == 0), ["STATUS"]] = "[ ]"
@@ -55,6 +55,19 @@ def output_data(data):
 
 
 def finish_task(df):
+    """
+    Labels a task as finished.
+
+    Parameters
+    ----------
+    input file: DataFrame
+
+    user input: str
+
+    Returns
+    -------
+    data file: DataFrame
+    """
     df_TTF = df
     task_to_finish = input("Which task should be finished?: \n")
     df_TTF.loc[[int(task_to_finish) - 1], ["STATUS"]] = 1
@@ -63,6 +76,19 @@ def finish_task(df):
 
 
 def unfinish_task(df):
+    """
+    Relabels a finished task as unfinished.
+
+    Parameters
+    ----------
+    input file: DataFrame
+
+    user input: str
+
+    Returns
+    -------
+    data file: DataFrame
+    """
     df_TTF = df
     task_to_finish = input("Which task should be unfinished?: \n")
     df_TTF.loc[[int(task_to_finish) - 1], ["STATUS"]] = 0
@@ -71,6 +97,19 @@ def unfinish_task(df):
 
 
 def remove_task(df):
+    """
+    Removes a task from the ToDo list.
+
+    Parameters
+    ----------
+    input file: DataFrame
+
+    user input: str
+
+    Returns
+    -------
+    data file: DataFrame
+    """
     df_TTF = df
     task_to_remove = input("Which task should be removed?: \n")
     df_TTF = df_TTF.drop(df_TTF.index[int(task_to_remove) - 1])
@@ -80,6 +119,17 @@ def remove_task(df):
 
 
 def do_nothing(df):
+    """
+    Enables not to change the ToDo list.
+
+    Parameters
+    ----------
+    input file: DataFrame
+
+    Returns
+    -------
+    data file: str
+    """
     return print(
         r"""
     ༼ つ ◕_◕ ༽つ  Don't leave me alone! ༼ つ ◕_◕ ༽つ
@@ -102,6 +152,19 @@ Brought to you by @hugo_weizenkeim and @pipaj97
 
 
 def parse_cli(operation, data):
+    """
+    User input activates specific function.
+
+    Parameters
+    ----------
+    input file: str
+
+    user input: str
+
+    Returns
+    -------
+    chosen function
+    """    
     functions = {
         "nothing": do_nothing,
         "add task": add_task,
