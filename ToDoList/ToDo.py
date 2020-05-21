@@ -3,142 +3,18 @@ A simple ToDo list
 """
 import pandas as pd
 
-# TODO:
-# - docstring ändern
-
-
-
-
-
-def add_task(df):
+class ToDo:
     """
-    Adds a task to the end of the csv file.
-
-    Parameters
-    ----------
-    input file: DataFrame
-
-    user input: str
-
-    Returns
-    -------
-    data file: DataFrame
+    Driver class for the functionality of the ToDo list.
     """
-    new_task = input("Add a new task:\n")
-    df_mod = df.append({"STATUS": 0, "TASK": new_task}, ignore_index=True)
-    csv_mod = df_mod.to_csv("../data/template.csv", index=False)
-    return csv_mod, output_data(df_mod)
+    def __init__(self):
+        self.data_file = "/home/julian/PythonProjects/MyProjects/ToDoList/data/template.csv"
+        self.df = pd.read_csv(self.data_file, sep=",")
+        print(self.greeting())
+        self.output_data(self.df)
 
-
-
-
-
-def output_data(data):
-    """
-    prints the data in the terminal
-
-    Parameters
-    ----------
-    input file: str
-
-    Returns
-    -------
-    none
-    """
-    data_out = data.copy()
-    print("Your tasks:\n")
-    data_out.loc[(data_out["STATUS"] == 0), ["STATUS"]] = "[ ]"
-    data_out.loc[(data_out["STATUS"] == 1), ["STATUS"]] = "[X]"
-    data_out.index = data_out.index + 1
-    print(data_out)
-    return None
-
-
-def finish_task(df):
-    """
-    Labels a task as finished.
-
-    Parameters
-    ----------
-    input file: DataFrame
-
-    user input: str
-
-    Returns
-    -------
-    data file: DataFrame
-    """
-    df_TTF = df
-    task_to_finish = input("Which task should be finished?: \n")
-    df_TTF.loc[[int(task_to_finish) - 1], ["STATUS"]] = 1
-    csv_mod = df_TTF.to_csv("../data/template.csv", index=False)
-    return csv_mod, output_data(df_TTF)
-
-
-def unfinish_task(df):
-    """
-    Relabels a finished task as unfinished.
-
-    Parameters
-    ----------
-    input file: DataFrame
-
-    user input: str
-
-    Returns
-    -------
-    data file: DataFrame
-    """
-    df_TTF = df
-    task_to_finish = input("Which task should be unfinished?: \n")
-    df_TTF.loc[[int(task_to_finish) - 1], ["STATUS"]] = 0
-    csv_mod = df_TTF.to_csv("../data/template.csv", index=False)
-    return csv_mod, output_data(df_TTF)
-
-
-def remove_task(df):
-    """
-    Removes a task from the ToDo list.
-
-    Parameters
-    ----------
-    input file: DataFrame
-
-    user input: str
-
-    Returns
-    -------
-    data file: DataFrame
-    """
-    df_TTF = df
-    task_to_remove = input("Which task should be removed?: \n")
-    df_TTF = df_TTF.drop(df_TTF.index[int(task_to_remove) - 1])
-    df_TTF = df_TTF.reset_index(drop=True)
-    csv_mod = df_TTF.to_csv("../data/template.csv", index=False)
-    return csv_mod, output_data(df_TTF)
-
-
-def do_nothing(df):
-    """
-    Enables not to change the ToDo list.
-
-    Parameters
-    ----------
-    input file: DataFrame
-
-    Returns
-    -------
-    data file: str
-    """
-    return print(
-        r"""
-    ༼ つ ◕_◕ ༽つ  Don't leave me alone! ༼ つ ◕_◕ ༽つ
-    """
-    )
-
-
-def greeting():
-    return r"""
+    def greeting(self):
+        return r"""
  ______        ____            __                    __
 /\__  _\      /\  _`\         /\ \       __         /\ \__
 \/_/\ \/   ___\ \ \/\ \    ___\ \ \     /\_\    ____\ \ ,_\
@@ -147,47 +23,136 @@ def greeting():
      \ \_\ \____/\ \____/\ \____/\ \____/ \ \_\/\____/ \ \__\
       \/_/\/___/  \/___/  \/___/  \/___/   \/_/\/___/   \/__/
 
-Brought to you by @hugo_weizenkeim and @pipaj97
-"""
-
-
-def parse_cli(operation, data):
+    Brought to you by @pipaj97 and @hugo_weizenkeim
     """
-    User input activates specific function.
-
-    Parameters
-    ----------
-    input file: str
-
-    user input: str
-
-    Returns
-    -------
-    chosen function
-    """    
-    functions = {
-        "nothing": do_nothing,
-        "add task": add_task,
-        "finish task": finish_task,
-        "unfinish task": unfinish_task,
-        "remove task": remove_task,
-    }
-    if operation in functions:
-        return functions[operation](data)
-    else:
-        print("Wrong input! Try one of these:\n")
-        for key, value in functions.items():
-            print(key)
 
 
-def main():
-    data_file = "../data/template.csv"
-    df = pd.read_csv(data_file, sep=",")
-    print(greeting())
-    output_data(df)
-    operation = (input("What do you want to do?\n")).lower()
-    parse_cli(operation, df)
+    def output_data(self, df):
+        """
+        Prints the data in the terminal.
+
+        Parameters
+        ----------
+        input file: str
+
+        Returns
+        -------
+        none
+        """
+        data_out = df.copy()
+        if data_out.empty:
+            print("There are no tasks.\n")
+        else:
+            print("Your tasks:\n")
+            data_out.loc[(data_out["STATUS"] == 0), ["STATUS"]] = "[ ]"
+            data_out.loc[(data_out["STATUS"] == 1), ["STATUS"]] = "[X]"
+            data_out.index = data_out.index + 1
+            print(data_out)
+        return None
 
 
-if __name__ == "__main__":
-    main()
+    def add_task(self):
+        """
+        Adds a task to the end of the csv file.
+
+        Parameters
+        ----------
+        input file: DataFrame
+
+        user input: str
+
+        Returns
+        -------
+        data file: DataFrame
+        """
+        new_task = input("Add a new task:\n")
+        if new_task == "":
+            print("Wrong input!")
+            return self.output_data(self.df)
+        else:
+            df_mod = self.df.append({"STATUS": 0, "TASK": new_task}, ignore_index=True)
+            csv_mod = df_mod.to_csv("/home/julian/PythonProjects/MyProjects/ToDoList/data/template.csv", index=False)
+            return csv_mod, self.output_data(df_mod)
+
+
+    def finish_task(self, chosen_task):
+        """
+        Labels a task as finished.
+
+        Parameters
+        ----------
+        input file: DataFrame
+
+        user input: str
+
+        Returns
+        -------
+        data file: DataFrame
+        """
+        df_TTF = self.df
+        task_to_finish = chosen_task
+        df_TTF.loc[df_TTF["TASK"] == chosen_task, ["STATUS"]] = 1
+        csv_mod = df_TTF.to_csv("/home/julian/PythonProjects/MyProjects/ToDoList/data/template.csv", index=False)
+        return csv_mod, self.output_data(df_TTF)
+
+
+    def unfinish_task(self, chosen_task):
+        """
+        Relabels a finished task as unfinished.
+
+        Parameters
+        ----------
+        input file: DataFrame
+
+        user input: str
+
+        Returns
+        -------
+        data file: DataFrame
+        """
+        df_TTU = self.df
+        task_to_finish = chosen_task
+        df_TTU.loc[df_TTU["TASK"] == chosen_task, ["STATUS"]] = 0
+        csv_mod = df_TTU.to_csv("/home/julian/PythonProjects/MyProjects/ToDoList/data/template.csv", index=False)
+        return csv_mod, self.output_data(df_TTU)
+
+
+    def remove_task(self, chosen_task):
+        """
+        Removes a task from the ToDo list.
+
+        Parameters
+        ----------
+        input file: DataFrame
+
+        user input: str
+
+        Returns
+        -------
+        data file: DataFrame
+        """
+        df_TTR = self.df
+        task_to_remove = chosen_task
+        df_TTR = df_TTR.drop(df_TTR[df_TTR["TASK"] == chosen_task].index)
+        new_df_TTR = df_TTR.reset_index(drop=True)
+        csv_mod = new_df_TTR.to_csv("/home/julian/PythonProjects/MyProjects/ToDoList/data/template.csv", index=False)
+        return csv_mod, self.output_data(new_df_TTR)
+
+
+    def exit(self):
+        """
+        Enables not to change the ToDo list.
+
+        Parameters
+        ----------
+        input file: DataFrame
+
+        Returns
+        -------
+        data file: str
+        """
+        return print(
+        r"""
+༼ つ ◕_◕ ༽つ  Don't leave me alone! ༼ つ ◕_◕ ༽つ
+        """
+        )
