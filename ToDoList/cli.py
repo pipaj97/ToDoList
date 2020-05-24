@@ -5,18 +5,18 @@ simple cli for the ToDo list
 
 from PyInquirer import style_from_dict, prompt
 from examples import custom_style_2, custom_style_1
-from ToDo import ToDo
+from .ToDo import ToDo
 import pandas as pd
 
 # TODO:
 # manchmal bricht es einfach ab?
-# docstrings hinzufügen und in TODO.py ändern
+# docstrings hinzufügen
 # windows support
-# setup.py
-# datafile in __init__ ändern
+# tests hinzufügen
 
 
 def ask_operation(liste):
+    print("\n")
     if liste.df.empty:
         operation_prompt = {
         'type': 'list',
@@ -60,23 +60,33 @@ def ask_permission():
 
 
 def parse_answer(liste):
+    """
+    
+    """
     operation = ask_operation(liste)
     switch_case = {
         'add task' : c_add_task,
         'finish task' : c_finish_task,
         'unfinish task' : c_unfinished_task,
         'remove task' : c_remove_task,
-        'exit' : c_exit
+        'exit' : exit
     }
 
     func = switch_case.get(operation)
     func(liste)
 
-
-def c_exit(liste):
-    return liste.exit()
-
 def c_add_task(liste):
+    """
+    Calls the add_task method of liste.
+    Parameters
+    ----------
+    liste: ToDo()
+        Instance of the ToDo class.
+
+    Returns
+    -------
+    parse_answer(liste): func
+    """
     liste.add_task()
     liste.df = pd.read_csv(liste.data_file, sep=",")
     return parse_answer(liste)
@@ -122,10 +132,43 @@ def c_remove_task(liste):
         liste.df = pd.read_csv(liste.data_file, sep=",")
         return parse_answer(liste)
 
+def greeting():
+    """Greets the user of the command line interface."""
+    return r"""
+ ______        ____            __                    __
+/\__  _\      /\  _`\         /\ \       __         /\ \__
+\/_/\ \/   ___\ \ \/\ \    ___\ \ \     /\_\    ____\ \ ,_\
+   \ \ \  / __`\ \ \ \ \  / __`\ \ \  __\/\ \  /',__\\ \ \/
+    \ \ \/\ \L\ \ \ \_\ \/\ \L\ \ \ \L\ \\ \ \/\__, `\\ \ \_
+     \ \_\ \____/\ \____/\ \____/\ \____/ \ \_\/\____/ \ \__\
+      \/_/\/___/  \/___/  \/___/  \/___/   \/_/\/___/   \/__/
+
+    Brought to you by @pipaj97 and @hugo_weizenkeim
+    """
+
+def exit(liste):
+    """
+    Enables not to change the ToDo list.
+
+    Parameters
+    ----------
+    liste: ToDo()
+        Instance of the ToDo class.
+
+    Returns
+    -------
+    raw str
+    """
+    return r"""
+༼ つ ◕_◕ ༽つ  Don't leave me alone! ༼ つ ◕_◕ ༽つ
+        """
+    
 
 def main():
+    print(greeting())
     liste = ToDo()
     parse_answer(liste)
+    print(exit(liste))
 
 
 if __name__ == '__main__':
